@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { render } from 'react-dom';
-import Editor from './Editor.js';
-import Graph from './Graph.js';
+import Editor from './components/Editor.js';
+import Graph from './components/Graph.js';
 
 class App extends Component {
   constructor() {

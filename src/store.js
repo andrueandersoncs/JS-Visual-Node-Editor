@@ -22,7 +22,7 @@ class Store {
     });
   }
 
-  create = action((type, optionalDefault) => this);
+  create = action((type, optionalDefault) => {});
 
   read = computed((type, uuid, optionalDefault) => get(this, `${type}.${uuid}`, optionalDefault));
   
@@ -33,7 +33,7 @@ class Store {
     }
   });
 
-  delete = action(() => null);
+  delete = action(() => {});
 
 }
 
