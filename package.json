@@ -1,0 +1,28 @@
+{
+  "name": "react-qosoj6",
+  "version": "0.0.0",
+  "private": true,
+  "dependencies": {
+    "lodash": "^4.17.11",
+    "mobx": "^5.5.1",
+    "mobx-react": "^5.3.4",
+    "monaco-editor": "^0.14.3",
+    "react": "^16.5.2",
+    "react-dom": "^16.5.2"
+  },
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test --env=jsdom",
+    "eject": "react-scripts eject"
+  },
+  "devDependencies": {
+    "react-scripts": "latest"
+  },
+  "browserslist": [
+    ">0.2%",
+    "not dead",
+    "not ie <= 11",
+    "not op_mini all"
+  ]
+}
