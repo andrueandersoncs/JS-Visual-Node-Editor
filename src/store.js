@@ -15,26 +15,45 @@ class TypedMap extends Map {
 class Store {
   constructor() {
     extendObservable(this, {
-      Graph: new Map(),
-      Node: new Map(),
-      Position: new Map(),
-      Edge: new Map(),
+      Graph: new TypedMap('Graph', { nodes: [], edges: [] }),
+      Edge: new TypedMap('Edge', { from: '', to: '' }),
+      Node: new TypedMap('Node', { name: '', value: '' }),
+      Position: new TypedMap('Position', { x: 0, y: 0 }),
     });
   }
 
-  create = action((type, optionalDefault) => {});
+  create = action((type, optionalDefaults) => {
+    let collection = get(this, type);
+    if (!collection) {
+      collection = new TypedMap(type, optionalDefaults);
+      extendObservable(this, { [type]: collection });
+    }
 
-  read = computed((type, uuid, optionalDefault) => get(this, `${type}.${uuid}`, optionalDefault));
+    const newType = { ...optionalDefaults, type, id: getId() };
+    collection.set(newType.id, newType);
+    return newType;
+  });
+
+  read = computed((type, uuid, optionalDefault) => {
+    const collection = get(this, type, optionalDefault);
+    return collection.get ? (collection.get(uuid) || optionalDefault) : optionalDefault;
+  });
   
   update = action((type, uuid, updates) => {
-    const document = this.read(type, uuid);
-    for (const p in updates) {
-      document[p] = updates[p];
+    const document = this.read(type, uuid, false);
+    if (document) {
+      for (const p in updates) {
+        document[p] = updates[p];
+      }
     }
   });
 
-  delete = action(() => {});
-
+  delete = action((type, uuid) => {
+    const collection = get(this, type, false);
+    if (collection && collection.has(uuid)) {
+      collection.delete(uuid);
+    }
+  });
 }
 
 export default new Store();
