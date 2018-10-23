@@ -16,16 +16,16 @@ class TypedMap extends Map {
 class State {
   constructor() {
     extendObservable(this, {
-      App: new TypedMap('App', { currentlyEditing: '' }),
-      Graph: new TypedMap('Graph', { nodes: [], edges: [] }),
-      Edge: new TypedMap('Edge', { from: '', to: '' }),
-      Node: new TypedMap('Node', { name: '', value: '' }),
+      App: new TypedMap('App', { currentlyEditing: '1' }),
+      Graph: new TypedMap('Graph', { nodes: ['2', '3'], edges: ['4'] }),
+      Edge: new TypedMap('Edge', { from: '2', to: '3' }),
+      Node: new TypedMap('Node', { name: 'Node A', value: '' }),
       Position: new TypedMap('Position', { x: 0, y: 0 }),
     });
   }
 }
 
-class Store {
+export class Store {
   constructor() {
     this.state = new State();
   }
@@ -36,7 +36,6 @@ class Store {
       collection = new TypedMap(type, optionalDefaults);
       extendObservable(this.state, { [type]: collection });
     }
-
     const newType = { ...optionalDefaults, type, id: getId() };
     collection.set(newType.id, newType);
     return newType;

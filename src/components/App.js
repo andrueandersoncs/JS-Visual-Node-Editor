@@ -4,11 +4,10 @@ import Editor from './Editor';
 import Graph from './Graph';
 import store from '../store';
 
-
 const App = observer(
   class App extends Component {
-    constructor() {
-      super();
+    constructor(props) {
+      super(props);
       this.app = store.create('App');
     }
 
@@ -19,8 +18,8 @@ const App = observer(
           height: '100%',
           display: 'flex'
         }}>
-          <Editor />
-          <Graph />
+            <Editor />
+            <Graph />
         </div>
       );
     }
