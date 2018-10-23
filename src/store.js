@@ -1,32 +1,40 @@
 import { extendObservable, action, computed } from 'mobx';
 import { get } from 'lodash';
+import getId from './utils/getId';
 
 /*
   References to objects must be held as UUIDs
 */
 
 class TypedMap extends Map {
-  constructor(type = 'untyped', defaults) {
-    super(defaults);
+  constructor(type = 'untyped', defaults = {}) {
+    super(Object.keys(defaults).map(key => ([ key, defaults[key] ])));
     this.type = type;
   }
 }
 
-class Store {
+class State {
   constructor() {
     extendObservable(this, {
+      App: new TypedMap('App', { currentlyEditing: '' }),
       Graph: new TypedMap('Graph', { nodes: [], edges: [] }),
       Edge: new TypedMap('Edge', { from: '', to: '' }),
       Node: new TypedMap('Node', { name: '', value: '' }),
       Position: new TypedMap('Position', { x: 0, y: 0 }),
     });
   }
+}
+
+class Store {
+  constructor() {
+    this.state = new State();
+  }
 
   create = action((type, optionalDefaults) => {
-    let collection = get(this, type);
+    let collection = get(this.state, type);
     if (!collection) {
       collection = new TypedMap(type, optionalDefaults);
-      extendObservable(this, { [type]: collection });
+      extendObservable(this.state, { [type]: collection });
     }
 
     const newType = { ...optionalDefaults, type, id: getId() };
@@ -35,7 +43,7 @@ class Store {
   });
 
   read = computed((type, uuid, optionalDefault) => {
-    const collection = get(this, type, optionalDefault);
+    const collection = get(this.state, type, optionalDefault);
     return collection.get ? (collection.get(uuid) || optionalDefault) : optionalDefault;
   });
   
@@ -49,7 +57,7 @@ class Store {
   });
 
   delete = action((type, uuid) => {
-    const collection = get(this, type, false);
+    const collection = get(this.state, type, false);
     if (collection && collection.has(uuid)) {
       collection.delete(uuid);
     }
